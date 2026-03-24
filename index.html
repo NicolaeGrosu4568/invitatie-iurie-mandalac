@@ -4,7 +4,7 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
   <meta name="theme-color" content="#06001a"/>
-  <title>Invitație — Iurie Mandalac 41 ani 🎉</title>
+  <title>Invitatie Ziua de Nastere a lui Iurie Mandalac</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Montserrat:wght@400;600&display=swap" rel="stylesheet"/>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -271,6 +271,102 @@
     }
 
     /* ══════════════════════════════════
+       INTRO OVERLAY
+    ══════════════════════════════════ */
+    #introOverlay {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: radial-gradient(ellipse at center, #1a0040 0%, #06001a 70%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    #introOverlay.hide {
+      opacity: 0;
+      pointer-events: none;
+      transform: scale(1.08);
+    }
+
+    #introContent {
+      text-align: center;
+      padding: 30px;
+    }
+
+    #introEnvelope {
+      font-size: 72px;
+      display: block;
+      margin-bottom: 20px;
+      animation: envFloat 2s ease-in-out infinite;
+    }
+
+    @keyframes envFloat {
+      0%,100% { transform: translateY(0) rotate(-3deg); }
+      50%      { transform: translateY(-14px) rotate(3deg); }
+    }
+
+    #introTitle {
+      font-size: 11px;
+      letter-spacing: 5px;
+      color: #ffd700;
+      text-transform: uppercase;
+      opacity: 0.75;
+      margin-bottom: 12px;
+    }
+
+    #introName {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: clamp(28px, 8vw, 48px);
+      color: #fff;
+      text-shadow: 0 0 40px rgba(255,215,0,0.7), 0 0 80px rgba(192,132,252,0.4);
+      margin-bottom: 30px;
+      animation: nameGlow 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes nameGlow {
+      from { text-shadow: 0 0 20px rgba(255,215,0,0.5), 0 0 40px rgba(192,132,252,0.2); }
+      to   { text-shadow: 0 0 50px rgba(255,215,0,1),   0 0 100px rgba(192,132,252,0.6); }
+    }
+
+    #introTap {
+      font-size: 13px;
+      letter-spacing: 3px;
+      color: #c084fc;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      animation: tapPulse 1.5s ease-in-out infinite;
+    }
+
+    @keyframes tapPulse {
+      0%,100% { opacity: 0.5; transform: scale(1); }
+      50%      { opacity: 1;   transform: scale(1.05); }
+    }
+
+    #introDots {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    #introDots span {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: #ffd700;
+      animation: dotBounce 1.2s ease-in-out infinite;
+    }
+    #introDots span:nth-child(2) { animation-delay: 0.2s; background: #ff6ec7; }
+    #introDots span:nth-child(3) { animation-delay: 0.4s; background: #c084fc; }
+
+    @keyframes dotBounce {
+      0%,100% { transform: translateY(0);    opacity: 0.4; }
+      50%      { transform: translateY(-8px); opacity: 1; }
+    }
+
+    /* ══════════════════════════════════
        FLOATING MUSIC BUTTON
     ══════════════════════════════════ */
     #musicBtn {
@@ -362,6 +458,17 @@
   </style>
 </head>
 <body>
+
+<!-- INTRO OVERLAY — porneste muzica la prima atingere -->
+<div id="introOverlay">
+  <div id="introContent">
+    <div id="introEnvelope">✉️</div>
+    <div id="introTitle">Ai primit o invitație specială</div>
+    <div id="introName">Iurie Mandalac</div>
+    <div id="introTap">Atinge pentru a deschide</div>
+    <div id="introDots"><span></span><span></span><span></span></div>
+  </div>
+</div>
 
 <!-- SAXOPHONE AUDIO -->
 <audio id="bgMusic" loop preload="auto">
@@ -465,27 +572,33 @@
 
 <script>
 /* ══════════════════════════════════
-   MUSIC — autoplay cu fallback vizual
+   INTRO OVERLAY + MUSIC START
+   Garantat pe orice browser/mobil:
+   muzica porneste la prima atingere
 ══════════════════════════════════ */
-const music = document.getElementById('bgMusic');
-const btn   = document.getElementById('musicBtn');
-const icon  = document.getElementById('musicIcon');
-const toast = document.getElementById('musicToast');
+const music   = document.getElementById('bgMusic');
+const overlay = document.getElementById('introOverlay');
+const btn     = document.getElementById('musicBtn');
+const icon    = document.getElementById('musicIcon');
 let   playing = false;
 
-music.volume = 0.55;
+music.volume = 0.6;
 
-function startMusic() {
+function openInvitation() {
+  /* Porneste muzica — functioneaza garantat in gestul utilizatorului */
   music.play().then(() => {
     playing = true;
     icon.textContent = '⏸';
-    toast.style.display = 'none';
-  }).catch(() => {
-    /* Browser blocked autoplay — show toast hint */
-    toast.style.display = 'block';
-    setTimeout(() => { toast.style.display = 'none'; }, 4000);
-  });
+  }).catch(() => {});
+
+  /* Ascunde overlay cu animatie */
+  overlay.classList.add('hide');
+  setTimeout(() => { overlay.style.display = 'none'; }, 900);
 }
+
+/* Orice atingere/click pe overlay deschide invitatia */
+overlay.addEventListener('click',      openInvitation, { once: true });
+overlay.addEventListener('touchstart', openInvitation, { once: true });
 
 function toggleMusic() {
   if (playing) {
@@ -500,17 +613,8 @@ function toggleMusic() {
   }
 }
 
-btn.addEventListener('click', e => { e.stopPropagation(); toggleMusic(); });
-
-/* Try autoplay immediately */
-window.addEventListener('load', () => {
-  setTimeout(startMusic, 800);   /* slight delay — feels natural */
-});
-
-/* iOS / Android: start on first touch anywhere */
-document.addEventListener('touchstart', () => {
-  if (!playing) startMusic();
-}, { once: true });
+btn.addEventListener('click',      e => { e.stopPropagation(); toggleMusic(); });
+btn.addEventListener('touchstart', e => { e.stopPropagation(); e.preventDefault(); toggleMusic(); });
 
 /* ── Video fade-in when loaded ── */
 const vid = document.getElementById('bgVideo');
