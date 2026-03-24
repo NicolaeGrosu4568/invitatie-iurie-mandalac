@@ -407,24 +407,46 @@
       to   { text-shadow: 0 0 50px rgba(255,215,0,1),   0 0 100px rgba(192,132,252,0.6); }
     }
 
-    #introTap {
-      font-size: 13px;
-      letter-spacing: 3px;
-      color: #c084fc;
-      text-transform: uppercase;
-      margin-bottom: 20px;
-      animation: tapPulse 1.5s ease-in-out infinite;
+    /* Buton mare de play in overlay */
+    #introPlayBtn {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      background: linear-gradient(135deg, #ffd700, #ff6ec7, #c084fc);
+      border: none;
+      border-radius: 20px;
+      padding: 20px 36px;
+      cursor: pointer;
+      animation: playBtnPulse 1.8s ease-in-out infinite;
+      box-shadow: 0 0 50px rgba(255,215,0,0.5), 0 8px 30px rgba(0,0,0,0.5);
+      -webkit-tap-highlight-color: transparent;
     }
 
-    @keyframes tapPulse {
-      0%,100% { opacity: 0.5; transform: scale(1); }
-      50%      { opacity: 1;   transform: scale(1.05); }
+    @keyframes playBtnPulse {
+      0%,100% { transform: scale(1);    box-shadow: 0 0 30px rgba(255,215,0,0.4), 0 8px 30px rgba(0,0,0,0.5); }
+      50%      { transform: scale(1.05); box-shadow: 0 0 70px rgba(255,215,0,0.9), 0 8px 40px rgba(0,0,0,0.6); }
+    }
+
+    #introPlayBtn .play-icon {
+      font-size: 48px;
+      line-height: 1;
+    }
+
+    #introPlayBtn .play-text {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      color: #06001a;
+      text-transform: uppercase;
     }
 
     #introDots {
       display: flex;
       justify-content: center;
       gap: 8px;
+      margin-top: 24px;
     }
 
     #introDots span {
@@ -540,7 +562,10 @@
     <div id="introEnvelope">✉️</div>
     <div id="introTitle">Ai primit o invitație specială</div>
     <div id="introName">Iurie Mandalac</div>
-    <div id="introTap">Atinge pentru a deschide</div>
+    <button id="introPlayBtn">
+      <span class="play-icon">🎷</span>
+      <span class="play-text">Deschide cu muzică</span>
+    </button>
     <div id="introDots"><span></span><span></span><span></span></div>
   </div>
 </div>
@@ -662,32 +687,55 @@
 <script>
 /* ══════════════════════════════════
    INTRO OVERLAY + MUSIC START
-   Garantat pe orice browser/mobil:
-   muzica porneste la prima atingere
+   AudioContext unlock — functioneaza
+   garantat pe iOS Safari + Android
 ══════════════════════════════════ */
-const music   = document.getElementById('bgMusic');
-const overlay = document.getElementById('introOverlay');
-const btn     = document.getElementById('musicBtn');
-const icon    = document.getElementById('musicIcon');
-let   playing = false;
+const music      = document.getElementById('bgMusic');
+const overlay    = document.getElementById('introOverlay');
+const playBtn    = document.getElementById('introPlayBtn');
+const floatBtn   = document.getElementById('musicBtn');
+const icon       = document.getElementById('musicIcon');
+let   playing    = false;
 
-music.volume = 0.6;
+music.volume = 0.65;
 
-function openInvitation() {
-  /* Porneste muzica — functioneaza garantat in gestul utilizatorului */
+function unlockAudio() {
+  /* Trick AudioContext — deblocheaza audio pe iOS/Android */
+  const AC = window.AudioContext || window.webkitAudioContext;
+  if (AC) {
+    try {
+      const ctx = new AC();
+      const silent = ctx.createBuffer(1, 1, 22050);
+      const src = ctx.createBufferSource();
+      src.buffer = silent;
+      src.connect(ctx.destination);
+      src.start(0);
+      ctx.resume();
+    } catch(e) {}
+  }
+}
+
+function openInvitation(e) {
+  e.preventDefault();
+  e.stopPropagation();
+
+  unlockAudio();
+
+  /* Porneste muzica imediat dupa gestul utilizatorului */
   music.play().then(() => {
     playing = true;
     icon.textContent = '⏸';
-  }).catch(() => {});
+  }).catch(() => {
+    /* Daca tot esueaza, butonul sax ramane vizibil ca fallback */
+  });
 
-  /* Ascunde overlay cu animatie */
+  /* Animatie de inchidere overlay */
   overlay.classList.add('hide');
   setTimeout(() => { overlay.style.display = 'none'; }, 900);
 }
 
-/* Orice atingere/click pe overlay deschide invitatia */
-overlay.addEventListener('click',      openInvitation, { once: true });
-overlay.addEventListener('touchstart', openInvitation, { once: true });
+playBtn.addEventListener('click',      openInvitation);
+playBtn.addEventListener('touchend',   openInvitation);
 
 function toggleMusic() {
   if (playing) {
@@ -695,6 +743,7 @@ function toggleMusic() {
     playing = false;
     icon.textContent = '🎷';
   } else {
+    unlockAudio();
     music.play().then(() => {
       playing = true;
       icon.textContent = '⏸';
@@ -702,8 +751,8 @@ function toggleMusic() {
   }
 }
 
-btn.addEventListener('click',      e => { e.stopPropagation(); toggleMusic(); });
-btn.addEventListener('touchstart', e => { e.stopPropagation(); e.preventDefault(); toggleMusic(); });
+floatBtn.addEventListener('click',      e => { e.stopPropagation(); toggleMusic(); });
+floatBtn.addEventListener('touchend',   e => { e.stopPropagation(); e.preventDefault(); toggleMusic(); });
 
 /* ── Video fade-in when loaded ── */
 const vid = document.getElementById('bgVideo');
