@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+  <meta name="theme-color" content="#06001a"/>
+  <title>Invitație — Iurie Mandalac 41 ani 🎉</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Montserrat:wght@400;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      min-height: 100%;
+      font-family: 'Montserrat', sans-serif;
+      background: #06001a;
+      overflow-x: hidden;
+    }
+
+    /* ══════════════════════════════════
+       VIDEO BACKGROUND
+    ══════════════════════════════════ */
+    .video-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .video-bg video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      transition: opacity 1.2s ease;
+    }
+
+    .video-bg video.loaded { opacity: 1; }
+
+    /* Dark overlay on video so card text is always readable */
+    .video-overlay {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to bottom, rgba(6,0,26,0.72) 0%, rgba(6,0,26,0.55) 50%, rgba(6,0,26,0.80) 100%),
+        radial-gradient(ellipse at center, rgba(6,0,26,0.2) 0%, rgba(6,0,26,0.6) 100%);
+    }
+
+    /* Fallback canvas (shows while video loads) */
+    #fallbackCanvas {
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+    }
+
+    /* ══════════════════════════════════
+       PAGE LAYOUT
+    ══════════════════════════════════ */
+    .page {
+      position: relative;
+      z-index: 10;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 12px 40px;
+    }
+
+    /* ══════════════════════════════════
+       CARD
+    ══════════════════════════════════ */
+    .card {
+      position: relative;
+      width: 100%;
+      max-width: 520px;
+      border-radius: 26px;
+      padding: 3px;
+      background: linear-gradient(135deg, #ffd700, #ff6ec7, #7b2fff, #00cfff, #ffd700);
+      background-size: 400% 400%;
+      animation: borderSpin 5s linear infinite;
+      box-shadow:
+        0 0 60px rgba(255,215,0,0.28),
+        0 0 140px rgba(123,47,255,0.18),
+        0 20px 60px rgba(0,0,0,0.6);
+    }
+
+    @keyframes borderSpin {
+      0%   { background-position: 0% 50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .card-inner {
+      background: rgba(6, 0, 26, 0.90);
+      border-radius: 24px;
+      padding: 38px 28px 34px;
+      backdrop-filter: blur(22px);
+      -webkit-backdrop-filter: blur(22px);
+      text-align: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* ── Ribbon ── */
+    .ribbon {
+      position: absolute;
+      top: 0; right: 22px;
+      width: 44px;
+      background: linear-gradient(180deg, #ffd700, #ffaa00);
+      color: #06001a;
+      font-size: 8px; font-weight: 700;
+      letter-spacing: 1px; text-align: center;
+      padding: 8px 2px 18px;
+      clip-path: polygon(0 0,100% 0,100% 85%,50% 100%,0 85%);
+      text-transform: uppercase; z-index: 5;
+    }
+
+    /* ── Sparkles overlay ── */
+    .sparkles { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+    .sparkle {
+      position: absolute; border-radius: 50%;
+      animation: sparkleAnim var(--d) ease-in-out infinite var(--delay);
+    }
+    @keyframes sparkleAnim {
+      0%   { opacity:0; transform:scale(0) translate(0,0); }
+      50%  { opacity:1; transform:scale(1); }
+      100% { opacity:0; transform:scale(0) translate(var(--tx),var(--ty)); }
+    }
+
+    /* ══════════════════════════════════
+       TYPOGRAPHY
+    ══════════════════════════════════ */
+    .crown {
+      font-size: 40px; display: block; margin-bottom: 8px;
+      animation: crownBounce 2.2s ease-in-out infinite;
+    }
+    @keyframes crownBounce {
+      0%,100% { transform: translateY(0) rotate(-5deg); }
+      50%      { transform: translateY(-8px) rotate(5deg); }
+    }
+
+    .label-sm {
+      font-size: 9px; letter-spacing: 6px;
+      color: #ffd700; text-transform: uppercase;
+      margin-bottom: 12px; opacity: 0.75;
+    }
+
+    /* "41" */
+    .big-number {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(80px, 24vw, 130px);
+      font-weight: 700;
+      letter-spacing: -3px; line-height: 1;
+      background: linear-gradient(135deg, #ffd700 0%, #ffaa00 30%, #ff6ec7 65%, #c084fc 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+      display: block;
+      margin: 0 0 8px 0;
+      animation: floatNum 3s ease-in-out infinite;
+      filter: drop-shadow(0 0 24px rgba(255,200,0,0.5));
+    }
+    @keyframes floatNum {
+      0%,100% { transform: translateY(0) scale(1); }
+      50%      { transform: translateY(-8px) scale(1.02); }
+    }
+
+    .ani-label {
+      font-size: 11px; font-weight: 600; letter-spacing: 6px;
+      color: #c084fc; text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+
+    .divider {
+      width: 75%; height: 1px; margin: 14px auto;
+      background: linear-gradient(90deg,transparent,#ffd70077,#ff6ec777,#ffd70077,transparent);
+    }
+
+    .name {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: clamp(24px, 7vw, 40px);
+      color: #fff; margin-bottom: 6px;
+      animation: glow 3s ease-in-out infinite alternate;
+    }
+    @keyframes glow {
+      from { text-shadow: 0 0 18px rgba(255,215,0,0.4),0 0 40px rgba(192,132,252,0.2); }
+      to   { text-shadow: 0 0 36px rgba(255,215,0,0.9),0 0 80px rgba(192,132,252,0.5); }
+    }
+
+    .tagline {
+      font-size: 10px; letter-spacing: 4px;
+      color: #c084fc; text-transform: uppercase; margin-bottom: 22px;
+    }
+
+    /* ══════════════════════════════════
+       INFO GRID
+    ══════════════════════════════════ */
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px; margin: 18px 0;
+    }
+
+    .info-block {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,215,0,0.14);
+      border-radius: 14px; padding: 15px 10px;
+      transition: transform .3s, border-color .3s, box-shadow .3s;
+    }
+    .info-block:hover, .info-block:active {
+      transform: translateY(-4px);
+      border-color: rgba(255,215,0,0.45);
+      box-shadow: 0 8px 28px rgba(255,215,0,0.15);
+    }
+    .info-block.full { grid-column: 1 / -1; }
+
+    .info-block .icon { font-size: 22px; margin-bottom: 6px; display: block; }
+    .info-block .lbl {
+      font-size: 8px; letter-spacing: 3px; color: #ffd700;
+      text-transform: uppercase; margin-bottom: 3px; opacity: 0.7;
+    }
+    .info-block .val {
+      font-family: 'Playfair Display', serif;
+      font-size: 14px; color: #fff; line-height: 1.4;
+    }
+
+    /* ══════════════════════════════════
+       ARTISTS
+    ══════════════════════════════════ */
+    .artists {
+      margin: 18px 0;
+      background: rgba(255,215,0,0.03);
+      border: 1px solid rgba(255,110,199,0.2);
+      border-radius: 18px; padding: 20px 16px;
+    }
+
+    .artists-title {
+      font-size: 8px; letter-spacing: 5px; color: #ff6ec7;
+      text-transform: uppercase; margin-bottom: 16px;
+    }
+
+    .artist-row {
+      display: flex; align-items: center;
+      justify-content: center; gap: 10px; margin-bottom: 12px;
+    }
+    .artist-row:last-child { margin-bottom: 0; }
+
+    .badge {
+      background: linear-gradient(135deg,#ffd700,#ff6ec7);
+      color: #06001a; font-size: 8px; font-weight: 700;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      padding: 3px 9px; border-radius: 50px;
+      white-space: nowrap;
+    }
+
+    .artist-name {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(15px, 4.5vw, 18px);
+      color: #fff; text-shadow: 0 0 18px rgba(255,110,199,0.4);
+    }
+
+    .sax-note { font-size: 10px; color: #c084fc; letter-spacing: 2px; margin-top: 8px; }
+
+    /* music pulse */
+    .pulse {
+      font-size: 28px; display: inline-block;
+      animation: mPulse 1.5s ease-in-out infinite;
+    }
+    @keyframes mPulse {
+      0%,100% { transform:scale(1); filter:drop-shadow(0 0 4px #ffd700); }
+      50%      { transform:scale(1.22); filter:drop-shadow(0 0 16px #ffd700); }
+    }
+
+    /* ══════════════════════════════════
+       FLOATING MUSIC BUTTON
+    ══════════════════════════════════ */
+    #musicBtn {
+      position: fixed;
+      bottom: 24px;
+      right: 20px;
+      z-index: 999;
+      width: 62px;
+      height: 62px;
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+      background: linear-gradient(135deg, #ffd700, #ff6ec7, #c084fc);
+      box-shadow: 0 0 24px rgba(255,110,199,0.55), 0 4px 20px rgba(0,0,0,0.5);
+      font-size: 26px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: btnPulse 2s ease-in-out infinite;
+      transition: transform .2s;
+    }
+    #musicBtn:active { transform: scale(0.9); }
+
+    @keyframes btnPulse {
+      0%,100% { box-shadow: 0 0 18px rgba(255,110,199,0.5), 0 4px 20px rgba(0,0,0,0.4); }
+      50%      { box-shadow: 0 0 40px rgba(255,110,199,0.9), 0 4px 30px rgba(0,0,0,0.5); }
+    }
+
+    #musicBtn .btn-ring {
+      position: absolute;
+      inset: -6px;
+      border-radius: 50%;
+      border: 2px solid rgba(255,215,0,0.4);
+      animation: ringExpand 2s ease-out infinite;
+    }
+
+    @keyframes ringExpand {
+      0%   { transform: scale(1);   opacity: 0.8; }
+      100% { transform: scale(1.5); opacity: 0; }
+    }
+
+    #musicToast {
+      position: fixed;
+      bottom: 96px;
+      right: 16px;
+      z-index: 999;
+      background: rgba(6,0,26,0.92);
+      border: 1px solid rgba(255,215,0,0.3);
+      border-radius: 12px;
+      padding: 10px 14px;
+      font-size: 11px;
+      color: #ffd700;
+      letter-spacing: 1px;
+      backdrop-filter: blur(10px);
+      white-space: nowrap;
+      animation: toastIn .4s ease;
+      pointer-events: none;
+    }
+
+    @keyframes toastIn {
+      from { opacity:0; transform:translateY(10px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+
+    /* ══════════════════════════════════
+       BOTTOM MESSAGE
+    ══════════════════════════════════ */
+    .msg {
+      margin-top: 20px;
+      background: linear-gradient(135deg,rgba(255,215,0,0.09),rgba(123,47,255,0.09));
+      border: 1px solid rgba(255,215,0,0.26);
+      border-radius: 14px; padding: 16px 14px;
+    }
+    .msg p { font-size: 10px; color: #ffd700; letter-spacing: 2px; text-transform: uppercase; line-height: 1.7; }
+    .msg strong { color:#fff; font-family:'Playfair Display',serif; font-size:14px; }
+
+    .footer {
+      margin-top: 22px; font-size: 8px; letter-spacing: 3px;
+      color: rgba(255,255,255,0.18); text-transform: uppercase;
+    }
+
+    /* ══════════════════════════════════
+       MOBILE TWEAKS
+    ══════════════════════════════════ */
+    @media (max-width: 400px) {
+      .card-inner { padding: 30px 18px 28px; }
+      .artist-row { flex-wrap: wrap; gap: 6px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- SAXOPHONE AUDIO -->
+<audio id="bgMusic" loop preload="auto">
+  <source src="https://archive.org/download/saxophone-jazz-collection/HMV%20Jazz%20-%20The%20Saxophone%20Jazz%20Collection%2F09%20Alligator%20Boogaloo.mp3" type="audio/mpeg"/>
+  <source src="https://archive.org/download/JazzClassics/017%20%20Cab%20Calloway%20-%20Jumpin%27%20Jive.mp3" type="audio/mpeg"/>
+</audio>
+
+<!-- FLOATING MUSIC BUTTON -->
+<button id="musicBtn" aria-label="Play/Pause music">
+  <div class="btn-ring"></div>
+  <span id="musicIcon">🎷</span>
+</button>
+<div id="musicToast" style="display:none;">🎷 Saxofon — apasă pentru muzică</div>
+
+<!-- VIDEO BACKGROUND -->
+<div class="video-bg">
+  <canvas id="fallbackCanvas"></canvas>
+  <video
+    id="bgVideo"
+    autoplay muted loop playsinline
+    preload="auto"
+    poster=""
+  >
+    <!-- Multiple sources: browser picks first it can play -->
+    <source src="https://assets.mixkit.co/videos/48636/48636-720.mp4" type="video/mp4"/>
+    <source src="https://assets.mixkit.co/videos/4344/4344-1080.mp4"  type="video/mp4"/>
+    <source src="https://assets.mixkit.co/videos/831/831-1080.mp4"    type="video/mp4"/>
+  </video>
+  <div class="video-overlay"></div>
+</div>
+
+<!-- CARD -->
+<div class="page">
+  <div class="card">
+    <div class="card-inner">
+      <div class="sparkles" id="sparklesContainer"></div>
+      <div class="ribbon">VIP<br/>★<br/>2026</div>
+
+      <span class="crown">👑</span>
+      <div class="label-sm">Te invit să sărbătorim</div>
+
+      <div class="big-number">41</div>
+      <div class="ani-label">ani de legendă</div>
+
+      <div class="divider"></div>
+
+      <div class="label-sm">Ziua de naștere a lui</div>
+      <div class="name">Iurie Mandalac</div>
+      <div class="tagline">✦ O seară de neuitat ✦</div>
+
+      <!-- INFO -->
+      <div class="info-grid">
+        <div class="info-block">
+          <span class="icon">📅</span>
+          <div class="lbl">Data</div>
+          <div class="val">12 Aprilie<br/>2026</div>
+        </div>
+        <div class="info-block">
+          <span class="icon">🕔</span>
+          <div class="lbl">Ora</div>
+          <div class="val">17:05</div>
+        </div>
+        <div class="info-block full">
+          <span class="icon">📍</span>
+          <div class="lbl">Locația</div>
+          <div class="val">Woody's · Northampton</div>
+        </div>
+        <div class="info-block full">
+          <span class="icon"><span class="pulse">🎶</span></span>
+          <div class="lbl">Program</div>
+          <div class="val">Muzică Live toată seara</div>
+        </div>
+      </div>
+
+      <!-- ARTISTS -->
+      <div class="artists">
+        <div class="artists-title">★ Artiști Invitați ★</div>
+        <div class="artist-row">
+          <span class="badge">Invitat Special</span>
+          <span class="artist-name">Alexandru Manciu</span>
+        </div>
+        <div class="divider" style="width:55%;margin:10px auto;"></div>
+        <div class="artist-row">
+          <span class="badge">Saxofon</span>
+          <span class="artist-name">Sergiu Florea</span>
+        </div>
+        <div class="sax-note">🎷 Live Saxophone Experience</div>
+      </div>
+
+      <!-- BOTTOM MESSAGE -->
+      <div class="msg">
+        <p>Această seară este dedicată unui om special —<br/>
+        <strong>Iurie Mandalac</strong><br/>
+        Fii acolo. Fii parte din magie. ✨</p>
+      </div>
+
+      <div class="footer">Woodys · Northampton · 41 Years of Greatness</div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ══════════════════════════════════
+   MUSIC — autoplay cu fallback vizual
+══════════════════════════════════ */
+const music = document.getElementById('bgMusic');
+const btn   = document.getElementById('musicBtn');
+const icon  = document.getElementById('musicIcon');
+const toast = document.getElementById('musicToast');
+let   playing = false;
+
+music.volume = 0.55;
+
+function startMusic() {
+  music.play().then(() => {
+    playing = true;
+    icon.textContent = '⏸';
+    toast.style.display = 'none';
+  }).catch(() => {
+    /* Browser blocked autoplay — show toast hint */
+    toast.style.display = 'block';
+    setTimeout(() => { toast.style.display = 'none'; }, 4000);
+  });
+}
+
+function toggleMusic() {
+  if (playing) {
+    music.pause();
+    playing = false;
+    icon.textContent = '🎷';
+  } else {
+    music.play().then(() => {
+      playing = true;
+      icon.textContent = '⏸';
+    });
+  }
+}
+
+btn.addEventListener('click', e => { e.stopPropagation(); toggleMusic(); });
+
+/* Try autoplay immediately */
+window.addEventListener('load', () => {
+  setTimeout(startMusic, 800);   /* slight delay — feels natural */
+});
+
+/* iOS / Android: start on first touch anywhere */
+document.addEventListener('touchstart', () => {
+  if (!playing) startMusic();
+}, { once: true });
+
+/* ── Video fade-in when loaded ── */
+const vid = document.getElementById('bgVideo');
+vid.addEventListener('canplay', () => vid.classList.add('loaded'));
+vid.addEventListener('playing',  () => vid.classList.add('loaded'));
+document.addEventListener('touchstart', () => { if (vid.paused) vid.play(); }, { once: true });
+
+/* ── Fallback canvas bg (visible while video loads) ── */
+(function () {
+  const cv = document.getElementById('fallbackCanvas');
+  const ctx = cv.getContext('2d');
+  let W, H, t = 0;
+  function resize(){ W = cv.width = window.innerWidth; H = cv.height = window.innerHeight; }
+  resize(); window.addEventListener('resize', resize);
+  const orbs = Array.from({length:30},()=>({
+    x:Math.random()*9999, y:Math.random()*9999,
+    r:Math.random()*50+15, hue:Math.random()*360,
+    vx:(Math.random()-.5)*.3, vy:-(Math.random()*.3+.05),
+    p:Math.random()*Math.PI*2, ps:Math.random()*.01+.004,
+  }));
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle='#06001a'; ctx.fillRect(0,0,W,H);
+    orbs.forEach(o=>{
+      o.x+=o.vx; o.y+=o.vy; o.p+=o.ps;
+      if(o.x<-o.r)o.x=W+o.r; if(o.x>W+o.r)o.x=-o.r;
+      if(o.y<-o.r)o.y=H+o.r;
+      const a=0.08+0.06*Math.abs(Math.sin(o.p));
+      const g=ctx.createRadialGradient(o.x,o.y,0,o.x,o.y,o.r);
+      g.addColorStop(0,`hsla(${o.hue},90%,65%,${a})`);
+      g.addColorStop(1,`hsla(${o.hue},80%,40%,0)`);
+      ctx.fillStyle=g;
+      ctx.beginPath(); ctx.arc(o.x,o.y,o.r,0,Math.PI*2); ctx.fill();
+    });
+    t+=.006; requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ── Sparkles on card ── */
+const cont = document.getElementById('sparklesContainer');
+const SC = ['#ffd700','#ff6ec7','#c084fc','#00cfff','#fff'];
+for(let i=0;i<16;i++){
+  const s=document.createElement('div');
+  s.className='sparkle';
+  s.style.cssText=`
+    left:${Math.random()*100}%;top:${Math.random()*100}%;
+    width:${(Math.random()*4+2).toFixed(1)}px;height:${(Math.random()*4+2).toFixed(1)}px;
+    background:${SC[i%SC.length]};
+    --d:${(Math.random()*3+2.5).toFixed(1)}s;
+    --delay:-${(Math.random()*4).toFixed(1)}s;
+    --tx:${((Math.random()-.5)*60).toFixed(0)}px;
+    --ty:${((Math.random()-.5)*60).toFixed(0)}px;
+  `;
+  cont.appendChild(s);
+}
+
+/* ── Tap/click fireworks ── */
+document.addEventListener('click', e=>{
+  for(let i=0;i<18;i++){
+    const d=document.createElement('div');
+    const angle=(i/18)*Math.PI*2, dist=Math.random()*80+40;
+    d.style.cssText=`
+      position:fixed;left:${e.clientX}px;top:${e.clientY}px;
+      width:7px;height:7px;border-radius:50%;pointer-events:none;z-index:9999;
+      background:${SC[Math.floor(Math.random()*SC.length)]};
+      box-shadow:0 0 10px currentColor;
+      transition:transform .6s ease-out,opacity .6s ease-out;
+      transform:translate(-50%,-50%);
+    `;
+    document.body.appendChild(d);
+    requestAnimationFrame(()=>{
+      d.style.transform=`translate(calc(-50% + ${(Math.cos(angle)*dist).toFixed(0)}px),calc(-50% + ${(Math.sin(angle)*dist).toFixed(0)}px)) scale(0)`;
+      d.style.opacity='0';
+    });
+    setTimeout(()=>d.remove(),700);
+  }
+});
+</script>
+</body>
+</html>

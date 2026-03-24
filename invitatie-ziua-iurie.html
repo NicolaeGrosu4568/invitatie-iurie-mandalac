@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Invitație — Iurie Mandalac 41 ani</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Montserrat', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* ─── Cinematic canvas background ─── */
+    #bgCanvas {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* ─── Card ─── */
+    .card {
+      position: relative;
+      z-index: 10;
+      width: min(680px, 96vw);
+      margin: 40px auto;
+      border-radius: 28px;
+      padding: 3px;
+      background: linear-gradient(135deg, #ffd700, #ff6ec7, #7b2fff, #00cfff, #ffd700);
+      background-size: 400% 400%;
+      animation: borderSpin 5s linear infinite;
+      box-shadow:
+        0 0 80px rgba(255, 215, 0, 0.3),
+        0 0 160px rgba(123, 47, 255, 0.2);
+    }
+
+    @keyframes borderSpin {
+      0%   { background-position: 0% 50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .card-inner {
+      background: rgba(6, 0, 18, 0.88);
+      border-radius: 26px;
+      padding: 48px 44px 44px;
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      text-align: center;
+    }
+
+    /* ─── Crown ─── */
+    .crown {
+      font-size: 44px;
+      display: block;
+      margin-bottom: 10px;
+      animation: crownBounce 2.2s ease-in-out infinite;
+    }
+
+    @keyframes crownBounce {
+      0%, 100% { transform: translateY(0) rotate(-5deg); }
+      50%       { transform: translateY(-10px) rotate(5deg); }
+    }
+
+    /* ─── "Te invit" label ─── */
+    .title-sub {
+      font-size: 10px;
+      letter-spacing: 7px;
+      color: #ffd700;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+      opacity: 0.75;
+    }
+
+    /* ─── Big "41" ─── */
+    .big-number-wrap {
+      margin: 0 0 14px 0;   /* space BELOW the number so nothing overlaps */
+      line-height: 1;
+    }
+
+    .big-number {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(90px, 18vw, 148px);
+      font-weight: 700;
+      letter-spacing: -4px;
+      line-height: 1;
+      background: linear-gradient(135deg, #ffd700 0%, #ffaa00 35%, #ff6ec7 65%, #c084fc 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      display: inline-block;
+      animation: floatNum 3s ease-in-out infinite;
+      filter: drop-shadow(0 0 28px rgba(255,200,0,0.55));
+    }
+
+    @keyframes floatNum {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50%       { transform: translateY(-10px) scale(1.02); }
+    }
+
+    /* ─── "ANI" label — sits calmly BELOW 41 ─── */
+    .ani-label {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 7px;
+      color: #c084fc;
+      text-transform: uppercase;
+      margin-bottom: 22px;
+      opacity: 0.9;
+    }
+
+    /* ─── Divider ─── */
+    .divider {
+      width: 80%;
+      height: 1px;
+      margin: 18px auto;
+      background: linear-gradient(90deg, transparent, #ffd70088, #ff6ec788, #ffd70088, transparent);
+    }
+
+    /* ─── Name ─── */
+    .title-name {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(28px, 6vw, 46px);
+      font-style: italic;
+      color: #fff;
+      margin-bottom: 6px;
+      animation: glow 3s ease-in-out infinite alternate;
+    }
+
+    @keyframes glow {
+      from { text-shadow: 0 0 20px rgba(255,215,0,0.4), 0 0 40px rgba(192,132,252,0.2); }
+      to   { text-shadow: 0 0 40px rgba(255,215,0,0.9), 0 0 90px rgba(192,132,252,0.5); }
+    }
+
+    .invite-text {
+      font-size: 11px;
+      letter-spacing: 4px;
+      color: #c084fc;
+      text-transform: uppercase;
+      margin-bottom: 28px;
+    }
+
+    /* ─── Info grid ─── */
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin: 22px 0;
+    }
+
+    .info-block {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,215,0,0.14);
+      border-radius: 16px;
+      padding: 18px 12px;
+      transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+      cursor: default;
+    }
+
+    .info-block:hover {
+      transform: translateY(-5px);
+      border-color: rgba(255,215,0,0.45);
+      box-shadow: 0 10px 32px rgba(255,215,0,0.15);
+    }
+
+    .info-block.full { grid-column: 1 / -1; }
+
+    .info-block .icon { font-size: 26px; margin-bottom: 8px; display: block; }
+    .info-block .label {
+      font-size: 9px; letter-spacing: 3px; color: #ffd700;
+      text-transform: uppercase; margin-bottom: 4px; opacity: 0.7;
+    }
+    .info-block .value {
+      font-family: 'Playfair Display', serif;
+      font-size: 15px; color: #fff; line-height: 1.4;
+    }
+
+    /* ─── Music pulse ─── */
+    .music-pulse {
+      font-size: 32px;
+      animation: musicPulse 1.5s ease-in-out infinite;
+      display: inline-block;
+    }
+
+    @keyframes musicPulse {
+      0%, 100% { transform: scale(1); filter: drop-shadow(0 0 4px #ffd700); }
+      50%       { transform: scale(1.25); filter: drop-shadow(0 0 18px #ffd700); }
+    }
+
+    /* ─── Artists ─── */
+    .artists-section {
+      margin: 22px 0;
+      background: rgba(255,215,0,0.04);
+      border: 1px solid rgba(255,110,199,0.2);
+      border-radius: 20px;
+      padding: 24px 20px;
+    }
+
+    .artists-label {
+      font-size: 9px; letter-spacing: 5px; color: #ff6ec7;
+      text-transform: uppercase; margin-bottom: 18px; opacity: 0.9;
+    }
+
+    .artist-row {
+      display: flex; align-items: center;
+      justify-content: center; gap: 12px; margin-bottom: 14px;
+    }
+
+    .artist-row:last-child { margin-bottom: 0; }
+
+    .artist-badge {
+      background: linear-gradient(135deg, #ffd700, #ff6ec7);
+      color: #06001a; font-size: 9px; font-weight: 700;
+      letter-spacing: 2px; text-transform: uppercase;
+      padding: 4px 10px; border-radius: 50px;
+    }
+
+    .artist-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 19px; color: #fff;
+      text-shadow: 0 0 20px rgba(255,110,199,0.4);
+    }
+
+    .artist-instrument { font-size: 11px; color: #c084fc; letter-spacing: 2px; }
+
+    /* ─── RSVP ─── */
+    .rsvp {
+      margin-top: 26px;
+      background: linear-gradient(135deg, rgba(255,215,0,0.10), rgba(123,47,255,0.10));
+      border: 1px solid rgba(255,215,0,0.28);
+      border-radius: 16px; padding: 18px;
+    }
+
+    .rsvp p { font-size: 11px; color: #ffd700; letter-spacing: 2px; text-transform: uppercase; }
+    .rsvp strong { color: #fff; font-family: 'Playfair Display', serif; font-size: 15px; }
+
+    /* ─── Footer ─── */
+    .footer {
+      margin-top: 26px; font-size: 9px; letter-spacing: 3px;
+      color: rgba(255,255,255,0.18); text-transform: uppercase;
+    }
+
+    /* ─── VIP Ribbon ─── */
+    .ribbon {
+      position: absolute; top: -1px; right: 30px;
+      width: 50px;
+      background: linear-gradient(180deg, #ffd700, #ffaa00);
+      color: #06001a; font-size: 9px; font-weight: 700;
+      letter-spacing: 1px; text-align: center;
+      padding: 8px 4px 22px;
+      clip-path: polygon(0 0, 100% 0, 100% 85%, 50% 100%, 0 85%);
+      text-transform: uppercase; z-index: 20;
+    }
+
+    /* ─── Sparkles overlay on card ─── */
+    .sparkles {
+      position: absolute; inset: 0; border-radius: 26px;
+      pointer-events: none; overflow: hidden;
+    }
+
+    .sparkle {
+      position: absolute; border-radius: 50%;
+      animation: sparkleAnim var(--d) ease-in-out infinite var(--delay);
+    }
+
+    @keyframes sparkleAnim {
+      0%   { opacity: 0; transform: scale(0) translate(0, 0); }
+      50%  { opacity: 1; transform: scale(1); }
+      100% { opacity: 0; transform: scale(0) translate(var(--tx), var(--ty)); }
+    }
+
+    @media (max-width: 480px) {
+      .card-inner { padding: 36px 20px 30px; }
+      .info-grid { grid-template-columns: 1fr; }
+      .info-block.full { grid-column: 1; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ─── Cinematic animated background ─── -->
+<canvas id="bgCanvas"></canvas>
+
+<div class="card">
+  <div class="sparkles" id="sparklesContainer"></div>
+  <div class="ribbon">VIP<br/>★<br/>2026</div>
+
+  <div class="card-inner">
+
+    <span class="crown">👑</span>
+    <div class="title-sub">Te invit să sărbătorim</div>
+
+    <!-- 41 wrapped so nothing overlaps -->
+    <div class="big-number-wrap">
+      <div class="big-number">41</div>
+    </div>
+    <div class="ani-label">ani de legendă</div>
+
+    <div class="divider"></div>
+
+    <div class="title-sub">Ziua de naștere a lui</div>
+    <div class="title-name">Iurie Mandalac</div>
+    <div class="invite-text">✦ O seară de neuitat ✦</div>
+
+    <div class="info-grid">
+      <div class="info-block">
+        <span class="icon">📅</span>
+        <div class="label">Data</div>
+        <div class="value">12 Aprilie 2026</div>
+      </div>
+      <div class="info-block">
+        <span class="icon">🕔</span>
+        <div class="label">Ora</div>
+        <div class="value">17:05</div>
+      </div>
+      <div class="info-block full">
+        <span class="icon">📍</span>
+        <div class="label">Locația</div>
+        <div class="value">Woody's · Northampton</div>
+      </div>
+      <div class="info-block full">
+        <span class="icon"><span class="music-pulse">🎶</span></span>
+        <div class="label">Program</div>
+        <div class="value">Muzică Live toată seara</div>
+      </div>
+    </div>
+
+    <div class="artists-section">
+      <div class="artists-label">★ Artiști invitați ★</div>
+      <div class="artist-row">
+        <span class="artist-badge">Invitat Special</span>
+        <span class="artist-name">Alexandru Manciu</span>
+      </div>
+      <div class="divider" style="width:60%;margin:12px auto;"></div>
+      <div class="artist-row">
+        <span class="artist-badge">Saxofon</span>
+        <span class="artist-name">Sergiu Florea</span>
+      </div>
+      <div class="artist-instrument" style="margin-top:10px;">🎷 Live Saxophone Experience</div>
+    </div>
+
+    <div class="rsvp">
+      <p>Această seară este dedicată unui om special —</p>
+      <p style="margin-top:6px;"><strong>Iurie Mandalac</strong></p>
+      <p style="margin-top:6px;">Fii acolo. Fii parte din magie. ✨</p>
+    </div>
+
+    <div class="footer">Woodys · Northampton · 41 Years of Greatness</div>
+  </div>
+</div>
+
+<script>
+/* ════════════════════════════════════════════
+   CINEMATIC BACKGROUND — club / party scene
+   Layers: aurora waves · spotlights · lasers · bokeh · glitter
+   ════════════════════════════════════════════ */
+const cv  = document.getElementById('bgCanvas');
+const ctx = cv.getContext('2d');
+let W, H, t = 0;
+
+function resize() { W = cv.width = window.innerWidth; H = cv.height = window.innerHeight; }
+resize();
+window.addEventListener('resize', resize);
+
+/* ── Bokeh orbs ── */
+const bokeh = Array.from({ length: 55 }, () => ({
+  x: Math.random() * 9999, y: Math.random() * 9999,
+  r: Math.random() * 38 + 8,
+  vx: (Math.random() - 0.5) * 0.25,
+  vy: -(Math.random() * 0.35 + 0.05),
+  hue: Math.random() * 360,
+  alpha: Math.random() * 0.18 + 0.04,
+  pulse: Math.random() * Math.PI * 2,
+  pulseSpeed: Math.random() * 0.012 + 0.005,
+}));
+
+/* ── Spotlights ── */
+const spots = [
+  { x: 0.15, targetX: 0.15, color: [255, 180, 0],   angle: 0, speed: 0.003 },
+  { x: 0.50, targetX: 0.50, color: [180, 80, 255],  angle: Math.PI, speed: 0.0025 },
+  { x: 0.85, targetX: 0.85, color: [0, 200, 255],   angle: 0, speed: 0.004 },
+];
+
+/* ── Lasers ── */
+const lasers = Array.from({ length: 6 }, (_, i) => ({
+  startX: Math.random(),
+  angle: (Math.PI / 12) * i - Math.PI / 4,
+  hue: i * 60,
+  phase: Math.random() * Math.PI * 2,
+  speed: (Math.random() * 0.008 + 0.003) * (Math.random() < 0.5 ? 1 : -1),
+  alpha: Math.random() * 0.5 + 0.2,
+}));
+
+/* ── Glitter particles ── */
+const glitter = Array.from({ length: 120 }, () => ({
+  x: Math.random() * 9999, y: Math.random() * 9999,
+  r: Math.random() * 1.8 + 0.4,
+  vx: (Math.random() - 0.5) * 0.5,
+  vy: -(Math.random() * 0.7 + 0.1),
+  hue: Math.random() * 360,
+  twinkle: Math.random() * Math.PI * 2,
+  twinkleSpeed: Math.random() * 0.06 + 0.02,
+}));
+
+function drawAurora() {
+  /* rolling aurora waves at the bottom */
+  for (let i = 0; i < 4; i++) {
+    const grd = ctx.createLinearGradient(0, H * 0.4, 0, H);
+    const hue1 = (t * 15 + i * 80) % 360;
+    const hue2 = (hue1 + 60) % 360;
+    grd.addColorStop(0,   `hsla(${hue1},90%,35%,0)`);
+    grd.addColorStop(0.5, `hsla(${hue1},90%,30%,0.12)`);
+    grd.addColorStop(1,   `hsla(${hue2},90%,20%,0.22)`);
+    ctx.fillStyle = grd;
+    ctx.beginPath();
+    ctx.moveTo(0, H);
+    for (let x = 0; x <= W; x += 40) {
+      const y = H * 0.65 + Math.sin((x / W) * Math.PI * 3 + t * 0.8 + i * 1.2) * H * 0.18
+                          + Math.cos((x / W) * Math.PI * 2 + t * 0.5 + i) * H * 0.1;
+      ctx.lineTo(x, y);
+    }
+    ctx.lineTo(W, H); ctx.lineTo(0, H);
+    ctx.closePath();
+    ctx.fill();
+  }
+}
+
+function drawSpotlights() {
+  spots.forEach(s => {
+    s.angle += s.speed;
+    s.x = s.targetX + Math.sin(s.angle) * 0.35;
+    const sx = s.x * W, sy = -20;
+    const radius = H * 1.1;
+    const grd = ctx.createRadialGradient(sx, sy, 0, sx, sy, radius);
+    const [r, g, b] = s.color;
+    grd.addColorStop(0,   `rgba(${r},${g},${b},0.22)`);
+    grd.addColorStop(0.4, `rgba(${r},${g},${b},0.06)`);
+    grd.addColorStop(1,   `rgba(${r},${g},${b},0)`);
+    ctx.fillStyle = grd;
+    ctx.beginPath();
+    ctx.moveTo(sx, sy);
+    ctx.arc(sx, sy, radius, Math.PI * 0.3, Math.PI * 0.7);
+    ctx.closePath();
+    ctx.fill();
+  });
+}
+
+function drawLasers() {
+  lasers.forEach(l => {
+    l.phase += l.speed;
+    const sx = (l.startX + Math.sin(l.phase) * 0.3) * W;
+    const angle = l.angle + Math.sin(l.phase * 0.7) * 0.3;
+    const ex = sx + Math.cos(angle) * W * 1.5;
+    const ey = Math.sin(angle) * W * 1.5;
+    const pulse = 0.4 + 0.6 * Math.abs(Math.sin(l.phase * 2));
+    ctx.save();
+    ctx.globalAlpha = l.alpha * pulse * 0.7;
+    ctx.strokeStyle = `hsl(${l.hue + t * 20},100%,65%)`;
+    ctx.lineWidth = 1.2;
+    ctx.shadowColor = `hsl(${l.hue + t * 20},100%,65%)`;
+    ctx.shadowBlur = 10;
+    ctx.beginPath();
+    ctx.moveTo(sx, 0); ctx.lineTo(ex, ey);
+    ctx.stroke();
+    ctx.restore();
+  });
+}
+
+function drawBokeh() {
+  bokeh.forEach(b => {
+    b.x += b.vx; b.y += b.vy;
+    b.pulse += b.pulseSpeed;
+    if (b.x < -b.r * 2) b.x = W + b.r;
+    if (b.x > W + b.r * 2) b.x = -b.r;
+    if (b.y < -b.r * 2) b.y = H + b.r;
+    const a = b.alpha * (0.6 + 0.4 * Math.sin(b.pulse));
+    const grd = ctx.createRadialGradient(b.x, b.y, 0, b.x, b.y, b.r);
+    grd.addColorStop(0,   `hsla(${b.hue},90%,70%,${a})`);
+    grd.addColorStop(0.5, `hsla(${b.hue},80%,50%,${a * 0.4})`);
+    grd.addColorStop(1,   `hsla(${b.hue},80%,40%,0)`);
+    ctx.fillStyle = grd;
+    ctx.beginPath();
+    ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+    ctx.fill();
+  });
+}
+
+function drawGlitter() {
+  glitter.forEach(g => {
+    g.x += g.vx; g.y += g.vy;
+    g.twinkle += g.twinkleSpeed;
+    if (g.x < 0) g.x = W; if (g.x > W) g.x = 0;
+    if (g.y < -5) g.y = H;
+    const a = 0.3 + 0.7 * Math.abs(Math.sin(g.twinkle));
+    ctx.globalAlpha = a;
+    ctx.fillStyle = `hsl(${g.hue},90%,75%)`;
+    ctx.shadowColor  = `hsl(${g.hue},90%,75%)`;
+    ctx.shadowBlur = 6;
+    ctx.beginPath();
+    ctx.arc(g.x, g.y, g.r, 0, Math.PI * 2);
+    ctx.fill();
+  });
+  ctx.globalAlpha = 1;
+  ctx.shadowBlur = 0;
+}
+
+function loop() {
+  ctx.clearRect(0, 0, W, H);
+
+  /* base dark */
+  ctx.fillStyle = '#050008';
+  ctx.fillRect(0, 0, W, H);
+
+  /* vignette */
+  const vig = ctx.createRadialGradient(W/2, H/2, 0, W/2, H/2, Math.max(W,H) * 0.75);
+  vig.addColorStop(0,   'rgba(0,0,0,0)');
+  vig.addColorStop(1,   'rgba(0,0,0,0.55)');
+  ctx.fillStyle = vig;
+  ctx.fillRect(0, 0, W, H);
+
+  drawAurora();
+  drawSpotlights();
+  drawLasers();
+  drawBokeh();
+  drawGlitter();
+
+  t += 0.008;
+  requestAnimationFrame(loop);
+}
+loop();
+
+/* ─── Sparkles on card ─── */
+const sparkCont = document.getElementById('sparklesContainer');
+const SC = ['#ffd700','#ff6ec7','#c084fc','#00cfff','#fff'];
+for (let i = 0; i < 20; i++) {
+  const s = document.createElement('div');
+  s.className = 'sparkle';
+  s.style.cssText = `
+    left:${Math.random()*100}%;top:${Math.random()*100}%;
+    width:${(Math.random()*4+2).toFixed(1)}px;height:${(Math.random()*4+2).toFixed(1)}px;
+    background:${SC[Math.floor(Math.random()*SC.length)]};
+    --d:${(Math.random()*3+2).toFixed(1)}s;
+    --delay:-${(Math.random()*4).toFixed(1)}s;
+    --tx:${((Math.random()-0.5)*70).toFixed(0)}px;
+    --ty:${((Math.random()-0.5)*70).toFixed(0)}px;
+  `;
+  sparkCont.appendChild(s);
+}
+
+/* ─── Click fireworks ─── */
+document.addEventListener('click', e => {
+  for (let i = 0; i < 20; i++) {
+    const dot = document.createElement('div');
+    const angle = (i / 20) * Math.PI * 2;
+    const dist  = Math.random() * 90 + 40;
+    dot.style.cssText = `
+      position:fixed;left:${e.clientX}px;top:${e.clientY}px;
+      width:7px;height:7px;border-radius:50%;pointer-events:none;z-index:9999;
+      background:${SC[Math.floor(Math.random()*SC.length)]};
+      box-shadow:0 0 10px currentColor;
+      transition:transform .65s ease-out,opacity .65s ease-out;
+      transform:translate(-50%,-50%);
+    `;
+    document.body.appendChild(dot);
+    requestAnimationFrame(() => {
+      dot.style.transform = `translate(calc(-50% + ${(Math.cos(angle)*dist).toFixed(1)}px),calc(-50% + ${(Math.sin(angle)*dist).toFixed(1)}px)) scale(0)`;
+      dot.style.opacity = '0';
+    });
+    setTimeout(() => dot.remove(), 700);
+  }
+});
+</script>
+</body>
+</html>
